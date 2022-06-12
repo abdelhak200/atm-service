@@ -1,0 +1,27 @@
+spring:
+   datasource:
+      url: jdbc:mysql://localhost:3306/atm
+      username: admin
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+   jpa:
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+      hibernate:
+         ddl-auto: update #when you want to create the table in the first time use create
+         naming:
+            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      properties:
+         hibernate:
+            format_sql: true
+      defer-datasource-initialization: false #when you want to popolate the table in the first time use true   sql:      init:         mode: never #when you want to popolate the table in thefirst time use always
+
+logging:
+   level:
+      org:
+         hibernate:
+            SQL: DEBUG
+            type:
+               descriptor:
+                  sql:
+                     BasicBinder: TRACE
+                     
