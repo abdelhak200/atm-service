@@ -11,7 +11,7 @@ public class AtmFormDto {
 	
     private int accountNumber;
     private int pin;
-    //this field can be used in withdraw/deposit
+    //this field can be used in withdraw/deposit in case of get balance it is not necessary 
     private double amount;
     
 }
