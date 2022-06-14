@@ -18,15 +18,27 @@ This project has been tested using:
 
 ## Installation
 
-To run this project you can:
-Clone from GitHub, build a Docker image and run:
+To run this project you can:      
+
+1- Clone from GitHub:
 
 ```bash
 git clone https://github.com/abdelhak200/atm-service.git
-docker build -t atm-api .
-docker run -p 8080:8080 atm-api
 ```
+2- Execute the docker-compose.yml file to run the image: abdelhak2019/hug:MySQLServer creating a containter and creating the network: atm-service_mysql-network
 
+```bash
+docker-compose up -d
+```
+3- This command permet to create atm-0.0.1-SNAPSHOT.jar skipping the tests
+```bash
+mvn clean install -Dmaven.test.skip=true
+```
+4- build a Docker image and run
+```bash
+docker build -t atm-api .
+docker run -p 8080:8080 --name atm-service --network atm-service_mysql-network -d atm-api
+```
 
 ## Usage
 
