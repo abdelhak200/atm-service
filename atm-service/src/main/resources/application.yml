@@ -1,6 +1,6 @@
 spring:
    datasource:
-      url: jdbc:mysql://localhost:3306/atm
+      url: jdbc:mysql://host.docker.internal:3306/atm  #use host.docker.internal instead of localhost to comunicate with container
       username: admin
       password: root
       driver-class-name: com.mysql.cj.jdbc.Driver

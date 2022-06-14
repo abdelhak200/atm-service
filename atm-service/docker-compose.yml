@@ -1,0 +1,27 @@
+version: '3'
+services:
+  db:
+    image: abdelhak2019/hug:MySQLServer
+    container_name: mySQLdb
+    command: --default-authentication-plugin=mysql_native_password
+    #restart: always
+    environment:
+      MYSQL_DATABASE: 'atm'
+      MYSQL_USER: 'admin'
+      MYSQL_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-HBdb:/var/lib/mysql
+    networks:
+      - mysql-network
+
+volumes:
+  my-HBdb:
+    driver: local
+
+networks:
+  mysql-network:

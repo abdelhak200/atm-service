@@ -8,7 +8,6 @@ target/maven*
 target/surefire*
 target/test*
 target/*.original
-docker-compose.*
 
 ### STS ###
 .apt_generated
