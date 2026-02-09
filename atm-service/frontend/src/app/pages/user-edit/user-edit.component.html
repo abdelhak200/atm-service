@@ -1,0 +1,48 @@
+<div class="card">
+  <div class="header-bar">
+    <div>
+      <h1 class="page-title">{{ isNew ? 'Create New User' : 'Edit User Details' }}</h1>
+      <p class="page-subtitle">
+        {{
+          isNew
+            ? 'Add a brand new user and return to the directory once you are done.'
+            : 'Update the user profile and save your changes.'
+        }}
+      </p>
+    </div>
+  </div>
+
+  <form [formGroup]="userForm" (ngSubmit)="saveUser()">
+    <div class="form-grid">
+      <label class="form-field">
+        ID
+        <input type="number" formControlName="id" placeholder="Enter unique ID" />
+      </label>
+      <label class="form-field">
+        Name
+        <input type="text" formControlName="name" placeholder="Surname" />
+      </label>
+      <label class="form-field">
+        First Name
+        <input type="text" formControlName="firstName" placeholder="First name" />
+      </label>
+      <label class="form-field">
+        Second Name
+        <input type="text" formControlName="secondName" placeholder="Second name" />
+      </label>
+      <label class="form-field">
+        Date of Birth
+        <input type="date" formControlName="dateOfBirth" />
+      </label>
+      <label class="form-field">
+        Email
+        <input type="email" formControlName="email" placeholder="name@example.com" />
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button class="primary-button" type="submit">Save</button>
+      <button class="ghost-button" type="button" (click)="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>

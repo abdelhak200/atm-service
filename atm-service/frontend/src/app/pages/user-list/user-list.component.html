@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="header-bar">
+    <div>
+      <h1 class="page-title">User Directory</h1>
+      <p class="page-subtitle">Manage user profiles, update details, or remove records.</p>
+    </div>
+    <button class="primary-button" type="button" (click)="navigateToCreate()">Create New User</button>
+  </div>
+
+  <div class="badge">{{ users.length }} users</div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>First Name</th>
+        <th>Second Name</th>
+        <th>Date of Birth</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.firstName }}</td>
+        <td>{{ user.secondName }}</td>
+        <td>{{ user.dateOfBirth }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <div class="action-buttons">
+            <button class="secondary-button" type="button" (click)="editUser(user.id)">Edit Details</button>
+            <button class="ghost-button" type="button" (click)="deleteUser(user.id)">Delete</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
