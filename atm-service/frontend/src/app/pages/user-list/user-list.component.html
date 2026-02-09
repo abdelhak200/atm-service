@@ -7,7 +7,26 @@
     <button class="primary-button" type="button" (click)="navigateToCreate()">Create New User</button>
   </div>
 
-  <div class="badge">{{ users.length }} users</div>
+  <div class="toolbar">
+    <div class="badge">{{ filteredUsers.length }} users</div>
+    <div class="search-share">
+      <div class="search-field">
+        <label class="sr-only" for="user-search">Search users</label>
+        <input
+          id="user-search"
+          class="text-input"
+          type="search"
+          placeholder="Search by name, email, or ID"
+          [formControl]="searchControl"
+        />
+      </div>
+      <div class="share-actions">
+        <button class="secondary-button" type="button" (click)="shareByEmail()">Share via Email</button>
+        <button class="ghost-button" type="button" (click)="copyShareLink()">Copy Link</button>
+      </div>
+    </div>
+    <span class="copy-status" role="status">{{ copyStatus }}</span>
+  </div>
 
   <table class="table">
     <thead>
@@ -22,7 +41,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
+      <tr *ngFor="let user of filteredUsers">
         <td>{{ user.id }}</td>
         <td>{{ user.name }}</td>
         <td>{{ user.firstName }}</td>
@@ -35,6 +54,9 @@
             <button class="ghost-button" type="button" (click)="deleteUser(user.id)">Delete</button>
           </div>
         </td>
+      </tr>
+      <tr *ngIf="filteredUsers.length === 0">
+        <td colspan="7" class="empty-state">No users match this search.</td>
       </tr>
     </tbody>
   </table>
