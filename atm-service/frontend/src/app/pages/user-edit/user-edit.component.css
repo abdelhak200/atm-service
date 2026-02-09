@@ -1,0 +1,8 @@
+form {
+  margin-top: 16px;
+}
+
+.form-field input.ng-invalid.ng-touched {
+  border-color: #f97316;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.15);
+}
