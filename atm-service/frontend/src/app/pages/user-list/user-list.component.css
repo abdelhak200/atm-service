@@ -42,3 +42,60 @@
   font-size: 13px;
   box-sizing: border-box;
 }
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0 20px;
+}
+
+.search-share {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-field {
+  flex: 1 1 240px;
+  max-width: 360px;
+}
+
+.text-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d6d9e0;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.share-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.copy-status {
+  font-size: 13px;
+  color: #475569;
+  min-height: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 20px 12px;
+  color: #6b7280;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

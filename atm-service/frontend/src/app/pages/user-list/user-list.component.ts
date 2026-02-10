@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 
@@ -15,52 +16,31 @@ type ColumnKey = FilterField | 'actions';
 export class UserListComponent implements OnInit, OnDestroy {
   users: User[] = [];
   filteredUsers: User[] = [];
+  searchControl = new FormControl('');
+  shareUrl = '';
+  copyStatus = '';
 
-  filters: Record<FilterField, string> = {
-    id: '',
-    name: '',
-    firstName: '',
-    secondName: '',
-    dateOfBirth: '',
-    email: ''
-  };
-
-  readonly columnWidths: Record<ColumnKey, number> = {
-    id: 90,
-    name: 170,
-    firstName: 170,
-    secondName: 170,
-    dateOfBirth: 150,
-    email: 230,
-    actions: 220
-  };
-
-  private resizingColumn: ColumnKey | null = null;
-  private startX = 0;
-  private startWidth = 0;
-
-  private readonly onMouseMove = (event: MouseEvent): void => {
-    if (!this.resizingColumn) {
-      return;
-    }
-
-    const nextWidth = this.startWidth + (event.clientX - this.startX);
-    this.columnWidths[this.resizingColumn] = Math.max(80, nextWidth);
-  };
-
-  private readonly onMouseUp = (): void => {
-    this.stopResizing();
-  };
-
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.users = this.userService.getUsers();
-    this.applyFilters();
-  }
+    const initialQuery = this.route.snapshot.queryParamMap.get('q') ?? '';
+    this.searchControl.setValue(initialQuery, { emitEvent: false });
+    this.applyFilter(initialQuery);
 
-  ngOnDestroy(): void {
-    this.stopResizing();
+    this.searchControl.valueChanges.subscribe((value) => {
+      const query = (value ?? '').toString();
+      this.applyFilter(query);
+      this.router.navigate([], {
+        queryParams: { q: query.trim() || null },
+        queryParamsHandling: 'merge',
+        replaceUrl: true
+      });
+    });
   }
 
   navigateToCreate(): void {
@@ -74,48 +54,60 @@ export class UserListComponent implements OnInit, OnDestroy {
   deleteUser(userId: number): void {
     this.userService.deleteUser(userId);
     this.users = this.userService.getUsers();
-    this.applyFilters();
+    this.applyFilter(this.searchControl.value ?? '');
   }
 
-  onFilterChange(field: FilterField, event: Event): void {
-    const value = (event.target as HTMLInputElement).value.trim();
-    this.filters[field] = value;
-    this.applyFilters();
+  shareByEmail(): void {
+    this.updateShareUrl();
+    const subject = 'User Directory search results';
+    const body = `Here is the link to the user search results: ${this.shareUrl}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   }
 
-  startResizing(event: MouseEvent, column: ColumnKey): void {
-    event.preventDefault();
-
-    this.resizingColumn = column;
-    this.startX = event.clientX;
-    this.startWidth = this.columnWidths[column];
-
-    document.addEventListener('mousemove', this.onMouseMove);
-    document.addEventListener('mouseup', this.onMouseUp);
+  async copyShareLink(): Promise<void> {
+    this.updateShareUrl();
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(this.shareUrl);
+        this.copyStatus = 'Link copied to clipboard.';
+      } else {
+        this.copyStatus = 'Clipboard access is unavailable in this browser.';
+      }
+    } catch (error) {
+      this.copyStatus = 'Unable to copy link. Please try again.';
+    }
   }
 
-  private stopResizing(): void {
-    if (!this.resizingColumn) {
+  private applyFilter(query: string): void {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) {
+      this.filteredUsers = [...this.users];
+      this.updateShareUrl();
       return;
     }
 
-    this.resizingColumn = null;
-    document.removeEventListener('mousemove', this.onMouseMove);
-    document.removeEventListener('mouseup', this.onMouseUp);
+    this.filteredUsers = this.users.filter((user) =>
+      [
+        user.id?.toString(),
+        user.name,
+        user.firstName,
+        user.secondName,
+        user.email,
+        user.dateOfBirth
+      ]
+        .filter(Boolean)
+        .some((value) => value!.toString().toLowerCase().includes(normalized))
+    );
+    this.updateShareUrl();
   }
 
-  private applyFilters(): void {
-    this.filteredUsers = this.users.filter((user) => {
-      const idText = user.id.toString().toLowerCase();
-
-      return (
-        idText.includes(this.filters.id.toLowerCase()) &&
-        user.name.toLowerCase().includes(this.filters.name.toLowerCase()) &&
-        user.firstName.toLowerCase().includes(this.filters.firstName.toLowerCase()) &&
-        user.secondName.toLowerCase().includes(this.filters.secondName.toLowerCase()) &&
-        user.dateOfBirth.toLowerCase().includes(this.filters.dateOfBirth.toLowerCase()) &&
-        user.email.toLowerCase().includes(this.filters.email.toLowerCase())
-      );
+  private updateShareUrl(): void {
+    const query = (this.searchControl.value ?? '').toString().trim();
+    const urlTree = this.router.createUrlTree([], {
+      relativeTo: this.route,
+      queryParams: { q: query || null },
+      queryParamsHandling: 'merge'
     });
+    this.shareUrl = `${window.location.origin}${this.router.serializeUrl(urlTree)}`;
   }
 }

@@ -7,67 +7,57 @@
     <button class="primary-button" type="button" (click)="navigateToCreate()">Create New User</button>
   </div>
 
-  <div class="badge">{{ filteredUsers.length }} users</div>
-
-  <div class="table-wrapper">
-    <table class="table resizable-table">
-      <thead>
-        <tr>
-          <th [style.width.px]="columnWidths.id">
-            <span>ID</span>
-            <span class="resize-handle" (mousedown)="startResizing($event, 'id')"></span>
-          </th>
-          <th [style.width.px]="columnWidths.name">
-            <span>Name</span>
-            <span class="resize-handle" (mousedown)="startResizing($event, 'name')"></span>
-          </th>
-          <th [style.width.px]="columnWidths.firstName">
-            <span>First Name</span>
-            <span class="resize-handle" (mousedown)="startResizing($event, 'firstName')"></span>
-          </th>
-          <th [style.width.px]="columnWidths.secondName">
-            <span>Second Name</span>
-            <span class="resize-handle" (mousedown)="startResizing($event, 'secondName')"></span>
-          </th>
-          <th [style.width.px]="columnWidths.dateOfBirth">
-            <span>Date of Birth</span>
-            <span class="resize-handle" (mousedown)="startResizing($event, 'dateOfBirth')"></span>
-          </th>
-          <th [style.width.px]="columnWidths.email">
-            <span>Email</span>
-            <span class="resize-handle" (mousedown)="startResizing($event, 'email')"></span>
-          </th>
-          <th [style.width.px]="columnWidths.actions">
-            <span>Actions</span>
-            <span class="resize-handle" (mousedown)="startResizing($event, 'actions')"></span>
-          </th>
-        </tr>
-        <tr class="filter-row">
-          <th><input type="text" placeholder="Search ID" (change)="onFilterChange('id', $event)" /></th>
-          <th><input type="text" placeholder="Search name" (change)="onFilterChange('name', $event)" /></th>
-          <th><input type="text" placeholder="Search first name" (change)="onFilterChange('firstName', $event)" /></th>
-          <th><input type="text" placeholder="Search second name" (change)="onFilterChange('secondName', $event)" /></th>
-          <th><input type="text" placeholder="Search birth date" (change)="onFilterChange('dateOfBirth', $event)" /></th>
-          <th><input type="text" placeholder="Search email" (change)="onFilterChange('email', $event)" /></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of filteredUsers">
-          <td [style.width.px]="columnWidths.id">{{ user.id }}</td>
-          <td [style.width.px]="columnWidths.name">{{ user.name }}</td>
-          <td [style.width.px]="columnWidths.firstName">{{ user.firstName }}</td>
-          <td [style.width.px]="columnWidths.secondName">{{ user.secondName }}</td>
-          <td [style.width.px]="columnWidths.dateOfBirth">{{ user.dateOfBirth }}</td>
-          <td [style.width.px]="columnWidths.email">{{ user.email }}</td>
-          <td [style.width.px]="columnWidths.actions">
-            <div class="action-buttons">
-              <button class="secondary-button" type="button" (click)="editUser(user.id)">Edit Details</button>
-              <button class="ghost-button" type="button" (click)="deleteUser(user.id)">Delete</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="toolbar">
+    <div class="badge">{{ filteredUsers.length }} users</div>
+    <div class="search-share">
+      <div class="search-field">
+        <label class="sr-only" for="user-search">Search users</label>
+        <input
+          id="user-search"
+          class="text-input"
+          type="search"
+          placeholder="Search by name, email, or ID"
+          [formControl]="searchControl"
+        />
+      </div>
+      <div class="share-actions">
+        <button class="secondary-button" type="button" (click)="shareByEmail()">Share via Email</button>
+        <button class="ghost-button" type="button" (click)="copyShareLink()">Copy Link</button>
+      </div>
+    </div>
+    <span class="copy-status" role="status">{{ copyStatus }}</span>
   </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>First Name</th>
+        <th>Second Name</th>
+        <th>Date of Birth</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsers">
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.firstName }}</td>
+        <td>{{ user.secondName }}</td>
+        <td>{{ user.dateOfBirth }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <div class="action-buttons">
+            <button class="secondary-button" type="button" (click)="editUser(user.id)">Edit Details</button>
+            <button class="ghost-button" type="button" (click)="deleteUser(user.id)">Delete</button>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="filteredUsers.length === 0">
+        <td colspan="7" class="empty-state">No users match this search.</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
