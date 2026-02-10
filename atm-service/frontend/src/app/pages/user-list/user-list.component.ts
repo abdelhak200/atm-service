@@ -4,12 +4,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 
+type FilterField = keyof Pick<User, 'id' | 'name' | 'firstName' | 'secondName' | 'dateOfBirth' | 'email'>;
+
+type ColumnKey = FilterField | 'actions';
+
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
   users: User[] = [];
   filteredUsers: User[] = [];
   searchControl = new FormControl('');
