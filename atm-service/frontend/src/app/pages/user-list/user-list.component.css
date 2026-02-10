@@ -1,4 +1,44 @@
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.resizable-table {
+  table-layout: fixed;
+  min-width: 1200px;
+}
+
 .table td,
 .table th {
   font-size: 14px;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resizable-table th {
+  padding-right: 16px;
+}
+
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  user-select: none;
+}
+
+.filter-row th {
+  padding: 8px;
+}
+
+.filter-row input {
+  width: 100%;
+  border: 1px solid #d4dae6;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+  box-sizing: border-box;
 }
